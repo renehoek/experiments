@@ -2,6 +2,18 @@
 using System;
 using System.Collections.Generic;
 
+public class Sports
+{
+   private string[] types = { "Baseball", "Basketball", "Football",
+                              "Hockey", "Soccer", "Tennis",
+                              "Volleyball" };
+
+   public string this[int i]
+   {
+      get => types[i];
+      set => types[i] = value;
+   }
+}
 
 public class SortByName : IComparer<Part>
 {
@@ -191,5 +203,10 @@ public class Example
         {
             Console.WriteLine(aPart);
         }
+
+        
+        Sports s = new Sports();
+        Console.WriteLine(s[0]);
+        Console.WriteLine(s[3]);
     }
 }
