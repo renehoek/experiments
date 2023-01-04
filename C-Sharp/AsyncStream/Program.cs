@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using System.Runtime.CompilerServices;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Octokit;
 
@@ -63,42 +64,37 @@ class Program
         {
             Credentials = new Octokit.Credentials(key)
         };
-
-        // <SnippetEnumerateOldStyle>
-        var progressReporter = new progressStatus((num) =>
-        {
-            Console.WriteLine($"Received {num} issues in total");
-        });
+       
         CancellationTokenSource cancellationSource = new CancellationTokenSource();
-
-        try
-        {
-            var results = await RunPagedQueryAsync(client, PagedIssueQuery, "docs",
-                cancellationSource.Token, progressReporter);
-            foreach(var issue in results)
-                Console.WriteLine(issue);
+        int iCnt = 0;        
+        await foreach(JObject item in RunPagedQueryAsync(client, PagedIssueQuery, "docs").WithCancellation(cancellationSource.Token)){            
+            Console.WriteLine(item.ToString());
+            iCnt++;
+            if (iCnt >= 10) {
+                cancellationSource.Cancel();
+            }
         }
-        catch (OperationCanceledException)
-        {
-            Console.WriteLine("Work has been cancelled");
-        }
+               
         // </SnippetEnumerateOldStyle>
     }
     // </SnippetStarterAppMain>
 
     // <SnippetRunPagedQuery>
-    private static async Task<JArray> RunPagedQueryAsync(GitHubClient client, string queryText, string repoName, CancellationToken cancel, IProgress<int> progress)
+    private static async IAsyncEnumerable<JToken> RunPagedQueryAsync(GitHubClient client, string queryText, string repoName, 
+    [EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
         var issueAndPRQuery = new GraphQLRequest
         {
             Query = queryText
-        };
+        };        
         issueAndPRQuery.Variables["repo_name"] = repoName;
-
-        JArray finalResults = new JArray();
+        
         bool hasMorePages = true;
         int pagesReturned = 0;
         int issuesReturned = 0;
+
+        JObject issues(JObject result) => (JObject)result["data"]!["repository"]!["issues"]!;
+        JObject pageInfo(JObject result) => (JObject)issues(result)["pageInfo"]!;
 
         // Stop with 10 pages, because these are large repos:
         while (hasMorePages && (pagesReturned++ < 10))
@@ -113,16 +109,15 @@ class Program
             hasMorePages = (bool)pageInfo(results)["hasPreviousPage"]!;
             issueAndPRQuery.Variables["start_cursor"] = pageInfo(results)["startCursor"]!.ToString();
             issuesReturned += issues(results)["nodes"]!.Count();
-            // <SnippetProcessPage>
-            finalResults.Merge(issues(results)["nodes"]!);
-            progress?.Report(issuesReturned);
-            cancel.ThrowIfCancellationRequested();
-            // </SnippetProcessPage>
-        }
-        return finalResults;
-
-        JObject issues(JObject result) => (JObject)result["data"]!["repository"]!["issues"]!;
-        JObject pageInfo(JObject result) => (JObject)issues(result)["pageInfo"]!;
+            foreach (JObject issue in issues(results)["nodes"]!) {
+                yield return issue; 
+                if (cancellationToken.IsCancellationRequested) {
+                    Console.WriteLine("Cancellation requested");
+                    hasMorePages = false;
+                    break;
+                }
+            };
+        }            
     }
     // </SnippetRunPagedQuery>
 
