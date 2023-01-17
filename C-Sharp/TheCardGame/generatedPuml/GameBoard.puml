@@ -1,0 +1,32 @@
+@startuml
+class GameBoard {
+    - {static} instance : GameBoard?
+    - {static} locker : object
+    # GameBoard()
+    + {static} GetInstance() : GameBoard
+    + setPlayers(player1:Player, player2:Player, currentTurnPlayer:Player) : void
+    - SwapPlayer() : void
+    + newTurn() : void
+    + endTurn() : void
+    + getCardsOnBoard(player:Player) : List<Card>
+    + takeCard() : bool
+    + drawCard(cardId:string) : bool
+    + declareAttack(cardId:string, opponentDefenseCardIds:List<string>) : bool
+    + peformAttack(cardId:string) : bool
+    + tapFromCard(cardId:string) : int
+    + unTapFromAll() : void
+    + energyTapped() : int
+    + defenseExhausted(sender:object?, e:DefenseExhaustedArgs) : void
+    + logCurrentSituation() : void
+}
+class "List`1"<T> {
+}
+GameBoard --> "player1" Player
+GameBoard --> "player2" Player
+GameBoard --> "currentTurnPlayer" Player
+GameBoard --> "opponentPlayer" Player
+GameBoard --> "player1_cards<Card>" "List`1"
+GameBoard --> "player2_cards<Card>" "List`1"
+GameBoard --> "currentTurnPlayerCards<Card>" "List`1"
+GameBoard --> "opponentPlayerCards<Card>" "List`1"
+@enduml

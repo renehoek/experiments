@@ -1,0 +1,19 @@
+@startuml
+abstract class CardFactory {
+    + {abstract} createLandCard(cardId:string, colour:CardColour) : LandCard
+    + {abstract} createSorceryCard(cardId:string, colour:CardColour) : SorceryCard
+    + {abstract} createCreatureCard(cardId:string, colour:CardColour, attackValue:int, defenseValue:int) : CreatureCard
+    + {abstract} createLandCard(cardId:string, colour:CardColour, effects:List<IEffect>) : LandCard
+    + {abstract} createSorceryCard(cardId:string, colour:CardColour, effects:List<IEffect>) : SorceryCard
+    + {abstract} createCreatureCard(cardId:string, colour:CardColour, effects:List<IEffect>, attackValue:int, defenseValue:int) : CreatureCard
+}
+class DemoGameFactory {
+    + <<override>> createLandCard(cardId:string, colour:CardColour) : LandCard
+    + <<override>> createSorceryCard(cardId:string, colour:CardColour) : SorceryCard
+    + <<override>> createCreatureCard(cardId:string, colour:CardColour, attackValue:int, defenseValue:int) : CreatureCard
+    + <<override>> createLandCard(cardId:string, colour:CardColour, effects:List<IEffect>) : LandCard
+    + <<override>> createSorceryCard(cardId:string, colour:CardColour, effects:List<IEffect>) : SorceryCard
+    + <<override>> createCreatureCard(cardId:string, colour:CardColour, effects:List<IEffect>, attackValue:int, defenseValue:int) : CreatureCard
+}
+CardFactory <|-- DemoGameFactory
+@enduml

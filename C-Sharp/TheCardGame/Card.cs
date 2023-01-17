@@ -25,8 +25,8 @@ public abstract class Card {
     public CardColour colour;    
     public List<IEffect> effects;
 
-    int energyCost = 0; // The amount of energy required to play this card.
-    string description; 
+    private int energyCost = 0; // The amount of energy required to play this card.
+    private string description; 
     private string cardId; /* The unique id of this card in the game. */
 
     public event EventHandler<CardEventArgs> OnIsSummoned = delegate { };
@@ -42,10 +42,21 @@ public abstract class Card {
         return this.cardId;
     }
 
-    // public virtual void IsSummoned() {
-    //     OnIsSummoned.Invoke(this, new CardEventArgs(this.effects));
+    public int getEnergyCost(){
+        return this.energyCost;
+    }
 
-    // }
+    public void setEnergyCost(int energyCost) {
+        this.energyCost = energyCost;
+    }
+
+    public virtual bool canBePlayed(int iAvailEnergyLevel) {
+        bool bResult = this.energyCost <= iAvailEnergyLevel;
+        if (!bResult) {
+            System.Console.WriteLine($"Card {this.cardId} can't be played: (energyNeeded/energyTapped) {this.getEnergyCost()}/{iAvailEnergyLevel}");
+        }
+        return bResult;
+    }
 }
 
 public abstract class LandCard : Card
@@ -54,9 +65,9 @@ public abstract class LandCard : Card
     private int _energyLevel = 0;
     private bool _energyInUse = false;
 
-    public LandCard(string cardId, CardColour colour) : base(cardId, colour)
+    public LandCard(string cardId, CardColour colour, int energyLevel) : base(cardId, colour)
     {
-    
+        this._energyLevel = energyLevel;
     }
 
     public int tapEnergy(){
@@ -160,7 +171,8 @@ public abstract class CreatureCard : Card, IDetermineAttackValue {
         }
         
         foreach(CreatureCard defenseCard in defenseCards) {
-            defenseCard.decreaseDefenseValue(this.attackValue);
+            System.Console.WriteLine($"Card {defenseCard.getId()} is defending with value {defenseCard.getAttackValue()}, card {this.getId()} is attacking with value {this.attackValue}.");
+            defenseCard.decreaseDefenseValue(this.attackValue);            
             this.decreaseDefenseValue(defenseCard.getAttackValue());
             //Once a defense has taken place, the impact on the attacked player is 0.
             this.actualAttackValue = 0;
@@ -172,6 +184,14 @@ public abstract class CreatureCard : Card, IDetermineAttackValue {
     public int getDefenseValue() {return this.defenseValue;}
 }
 
+
+
+public class CardEventArgs : EventArgs {
+    public List<IEffect> effects {get; set;}
+    public CardEventArgs(List<IEffect> effects){
+        this.effects = effects;
+    }
+}
 
 public class AttackValue {
     private int _attackValue;

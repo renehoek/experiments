@@ -1,0 +1,84 @@
+@startuml
+class CardColour <<struct>> {
+    + CardColour(colourName:string)
+    + colourname : string <<get>>
+}
+interface IEffect {
+    + onPlacedOnBoard(sourcecard:Card, currentTurnPlayer:Player, opponentPlayer:Player, theBoard:GameBoard) : void
+    + onAttack(sourcecard:Card, currentTurnPlayer:Player, opponentPlayer:Player, theBoard:GameBoard) : void
+    + onDisposed(sourcecard:Card, currentTurnPlayer:Player, opponentPlayer:Player, theBoard:GameBoard) : void
+}
+interface IDetermineAttackValue {
+    + calculateActualAttackValue(defenseCards:List<CreatureCard>) : void
+}
+abstract class Card {
+    energyCost : int = 0
+    description : string
+    - cardId : string
+    +  <<event>> OnIsSummoned : EventHandler<CardEventArgs> 
+    + Card(cardId:string, colour:CardColour)
+    + getId() : string
+}
+abstract class LandCard {
+    - _energyLevel : int = 0
+    - _energyInUse : bool = false
+    + LandCard(cardId:string, colour:CardColour)
+    + tapEnergy() : int
+    + unTapEnergy() : void
+    + isTapped() : bool
+    + energyLevel() : int
+}
+abstract class SorceryCard {
+    + SorceryCard(cardId:string, colour:CardColour)
+}
+abstract class CreatureCard {
+    - attackValue : int = 0
+    - actualAttackValue : int = 0
+    - defenseValue : int = 0
+    - useAsDefenseForDeclaredAttack : bool = false
+    + CreatureCard(cardId:string, colour:CardColour, attackValue:int, defenseValue:int)
+    +  <<event>> OnDeclareAttack : EventHandler<AttackEventArgs> 
+    +  <<event>> OnPeformAttack : EventHandler<AttackEventArgs> 
+    +  <<event>> OnDefenseExhausted : EventHandler<DefenseExhaustedArgs> 
+    + doDeclareAttack() : void
+    + doPeformAttack() : void
+    + doDefenseExhausted() : void
+    + useAsDefense() : void
+    + isDefender() : bool
+    + resetIsDefender() : void
+    + decreaseDefenseValue(iNumber:int) : void
+    + decreaseActualAttackValue(iNumber:int) : void
+    + <<virtual>> calculateActualAttackValue(defenseCards:List<CreatureCard>) : void
+    + getAttackValue() : int
+    + getActualAttackValue() : int
+    + getDefenseValue() : int
+}
+class AttackValue {
+    - _attackValue : int
+    + AttackValue(initialValue:int)
+    + alterValue(alterValue:int) : void
+    + getValue() : int
+}
+class AttackEventArgs {
+    + AttackEventArgs(attackValue:AttackValue)
+}
+class DefenseExhaustedArgs {
+}
+class "List`1"<T> {
+}
+enum Spelllifetime {
+    Instantaneous,
+    Permanent,
+}
+Card --> "colour" CardColour
+Card --> "effects<IEffect>" "List`1"
+Card <|-- LandCard
+Card <|-- SorceryCard
+SorceryCard --> "duration" Spelllifetime
+Card <|-- CreatureCard
+IDetermineAttackValue <|-- CreatureCard
+EventArgs <|-- AttackEventArgs
+AttackEventArgs --> "_attackValue" AttackValue
+EventArgs <|-- DefenseExhaustedArgs
+SorceryCard +-- Spelllifetime
+@enduml

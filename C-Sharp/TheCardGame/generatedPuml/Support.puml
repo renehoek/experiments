@@ -1,0 +1,14 @@
+@startuml
+class CardNotFoundException {
+    + CardNotFoundException()
+    + CardNotFoundException(message:string)
+    + CardNotFoundException(message:string, inner:Exception)
+}
+class Support <<static>> {
+    {static} + moveCard(sourceList:List<Card>, targetList:List<Card>, iPos:int) : Card
+    {static} + moveCard(sourceList:List<Card>, targetList:List<Card>, cardId:string) : Card
+    {static} + removeCard(sourceList:List<Card>, cardId:string) : Card
+    {static} + findCard(sourceList:List<Card>, cardId:string) : (Card, int)
+    {static} + isOnList(sourceList:List<Card>, cardId:string) : bool
+}
+@enduml

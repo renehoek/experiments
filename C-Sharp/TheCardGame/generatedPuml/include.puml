@@ -1,0 +1,14 @@
+@startuml
+!include ./CardFactory.puml
+!include ./Observerinterfaces.puml
+!include ./Support.puml
+!include ./DemoCard.puml
+!include ./Card.puml
+!include ./GameBoard.puml
+!include ./Player.puml
+!include ./PubSub.puml
+!include ./Program.puml
+!include ./obj/Debug/net60/TheCardGame.AssemblyInfo.puml
+!include ./obj/Debug/net60/TheCardGame.GlobalUsings.g.puml
+!include ./obj/Debug/net60/.NETCoreApp,Version=v6.0.AssemblyAttributes.puml
+@enduml

@@ -1,0 +1,24 @@
+@startuml
+class Player {
+    - healthValue : int
+    - name : string
+    - defenseCardIdsForDeclaredAttack : List<string>?
+    + Player(name:string, initialLife:int, deck:List<Card>)
+    + getName() : string
+    + decreaseHealthValue(iValue:int) : void
+    + getHealthValue() : int
+    + setDefenseCards(defenseCardIds:List<string>) : void
+    + resetDefenseCards() : void
+    + <<virtual>> absorbAttack(sender:object?, e:AttackEventArgs) : void
+    + <<virtual>> prepareDefense(sender:object?, e:AttackEventArgs) : void
+    + takeCard() : Card?
+    + drawCard(cardId:string) : Card?
+    + disposeRandomCard() : Card
+    + trimCards(maxCards:int) : void
+}
+class "List`1"<T> {
+}
+Player --> "deck<Card>" "List`1"
+Player --> "discardPile<Card>" "List`1"
+Player --> "inHand<Card>" "List`1"
+@enduml

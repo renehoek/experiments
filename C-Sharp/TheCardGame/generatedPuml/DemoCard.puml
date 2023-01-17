@@ -1,0 +1,18 @@
+@startuml
+class RemoveRandomCardEffect {
+    + onPlacedOnBoard(sourcecard:Card, currentTurnPlayer:Player, opponentPlayer:Player, theBoard:GameBoard) : void
+}
+class DemoLandCard {
+    + DemoLandCard(cardId:string, colour:CardColour)
+}
+class DemoSorceryCard {
+    + DemoSorceryCard(cardId:string, colour:CardColour)
+}
+class DemoCreatureCard {
+    + DemoCreatureCard(cardId:string, colour:CardColour, attackValue:int, defenseValue:int)
+}
+IEffect <|-- RemoveRandomCardEffect
+LandCard <|-- DemoLandCard
+SorceryCard <|-- DemoSorceryCard
+CreatureCard <|-- DemoCreatureCard
+@enduml

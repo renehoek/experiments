@@ -1,0 +1,9 @@
+@startuml
+class CardEventArgs {
+    + CardEventArgs(effects:List<IEffect>)
+}
+class "List`1"<T> {
+}
+EventArgs <|-- CardEventArgs
+CardEventArgs --> "effects<IEffect>" "List`1"
+@enduml

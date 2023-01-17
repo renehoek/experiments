@@ -1,0 +1,10 @@
+@startuml
+interface IObserver {
+    Update(subject:ISubject, eventname:string) : void
+}
+interface ISubject {
+    Attach(observer:IObserver) : void
+    Detach(observer:IObserver) : void
+    Notify(eventname:string) : void
+}
+@enduml

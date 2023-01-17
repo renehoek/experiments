@@ -15,6 +15,8 @@ public class GameBoard {
     private List<Card> currentTurnPlayerCards;
     private List<Card> opponentPlayerCards;
 
+    private int iTurnCnt;
+
     protected GameBoard() {              
         this.player1_cards = new List<Card>();
         this.player2_cards = new List<Card>();
@@ -25,6 +27,7 @@ public class GameBoard {
         this.opponentPlayer = this.player2;
         this.currentTurnPlayerCards = new List<Card>();
         this.opponentPlayerCards = new List<Card>();
+        this.iTurnCnt = 0;
     }
 
     public static GameBoard GetInstance()
@@ -75,16 +78,18 @@ public class GameBoard {
     }
 
     public void newTurn() {
+        this.iTurnCnt++;
 
     }
 
     public void endTurn() {
 
+        this.opponentPlayer.resetDefenseCards();
+        this.unTapFromAll();
         this.SwapPlayer();
     }
 
-    /* returns the current cards on the board for the specififed player
-    The returned list is *not* a deep-copy! */
+    /* returns the current cards on the board for the specififed player */
     public List<Card> getCardsOnBoard(Player player) {
         if (player.getName() == this.opponentPlayer.getName()) {
             return this.opponentPlayerCards;
@@ -129,17 +134,42 @@ public class GameBoard {
         
     }
 
+    /* Returns the card-ids which can be used in a attack regarding the avaiable energy obtained from the land-cards. */
+    public List<string> energyLevelSufficientForCards() {
+        int iAvailEnergyLevel = this.energyTapped();
+        List<string> cardIds = new List<string>();
+        foreach(Card card in this.currentTurnPlayerCards) {
+            if (card is LandCard) {
+                continue;
+            }
+            if (card.canBePlayed(iAvailEnergyLevel)) {
+                cardIds.Add(card.getId());
+            }
+        }
+        return cardIds;
+    }
+
     public bool declareAttack(string cardId, List<string> opponentDefenseCardIds) {
+        this.opponentPlayer.setDefenseCards(opponentDefenseCardIds);
+        return this.declareAttack(cardId);
+    }
+
+    public bool declareAttack(string cardId) {
         (Card? card, int iPos) = Support.findCard(this.currentTurnPlayerCards, cardId);
         CreatureCard? creatureCard = card as CreatureCard;
+        this.logEnergyTapped();
+
+        bool attackDeclared = false;
         if (creatureCard is not null) {
-            this.opponentPlayer.setDefenseCards(opponentDefenseCardIds);
-            creatureCard.doDeclareAttack();
-            return true;
-        } else {
-            return false;
-        }
+            if (creatureCard.canBePlayed(this.energyTapped())) {                                
+                creatureCard.doDeclareAttack();
+                attackDeclared = true;
+            }            
+        } 
+
+        return attackDeclared;
     }
+
     public bool peformAttack(string cardId) {
         Card? card;
         int iPos;
@@ -153,11 +183,13 @@ public class GameBoard {
         CreatureCard? creatureCard = card as CreatureCard;
         bool attackDone = false;
         if (creatureCard is not null) {
-            creatureCard.doPeformAttack();
-            attackDone = true;
+            this.logEnergyTapped();
+            if (creatureCard.canBePlayed(this.energyTapped())) { 
+                creatureCard.doPeformAttack();
+                attackDone = true;
+            }
         } 
 
-        this.opponentPlayer.resetDefenseCards();
         return attackDone;
     }
 
@@ -218,9 +250,13 @@ public class GameBoard {
         }
     }
 
+    public void logEnergyTapped() {
+        System.Console.WriteLine($"Current turn-player: {this.currentTurnPlayer?.getName()}, energy-tapped: {this.energyTapped()}");
+    }
+
     public void logCurrentSituation() {
         System.Console.WriteLine("==== Current situation");
-        System.Console.WriteLine($"Current turn-player: {this.currentTurnPlayer?.getName()}");
+        System.Console.WriteLine($"Current turn-player: {this.currentTurnPlayer?.getName()}, Turn: {this.iTurnCnt}, energy-tapped: {this.energyTapped()}");
         System.Console.WriteLine($"Player {this.player1.getName()}: Health: {this.player1.getHealthValue()}");
         System.Console.WriteLine($"Player {this.player2.getName()}: Health: {this.player2.getHealthValue()}");
 

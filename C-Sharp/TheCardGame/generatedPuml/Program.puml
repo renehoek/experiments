@@ -1,0 +1,8 @@
+@startuml
+class Program {
+    {static} setupPlayersAndCards() : void
+    {static} setupACurrentSituation() : void
+    {static} RunADemoGame() : void
+    {static} Main(args:string[]) : void
+}
+@enduml

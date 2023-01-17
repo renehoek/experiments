@@ -9,7 +9,7 @@ class RemoveRandomCardEffect: IEffect {
 
 
 public class DemoLandCard : LandCard {
-    public DemoLandCard(string cardId, CardColour colour): base(cardId, colour) {}
+    public DemoLandCard(string cardId, CardColour colour, int energyLevel): base(cardId, colour, energyLevel) {}
 
 }
 
