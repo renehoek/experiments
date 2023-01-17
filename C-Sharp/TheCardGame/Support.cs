@@ -63,4 +63,13 @@ static class Support {
 
         return (cardFound, iPos);
     }
+
+    static public bool isOnList(List<Card> sourceList, string cardId) {
+        try {
+            (Card cardFound, int iPos) = Support.findCard(sourceList, cardId);
+            return true;
+        } catch (CardNotFoundException) {
+            return false;
+        }
+    }
 }

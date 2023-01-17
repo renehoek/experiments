@@ -16,6 +16,9 @@ public interface IEffect {
     public void onDisposed(Card sourcecard, Player currentTurnPlayer, Player opponentPlayer, GameBoard theBoard) {}
 }
 
+public interface IDetermineAttackValue {
+    public void calculateActualAttackValue(List<CreatureCard> defenseCards);
+}
 
 
 public abstract class Card {
@@ -91,13 +94,14 @@ public abstract class SorceryCard : Card
 
 }
 
-public abstract class CreatureCard : Card {
+public abstract class CreatureCard : Card, IDetermineAttackValue {
     /* Used to attack opponenent (decrease opponent lifePoint) or for defense.
     
     */
-    int attackValue = 0;
-    int defenseValue = 0;
-    bool useAsDefenseForDeclaredAttack = false;
+    private int attackValue = 0; /* The attackValue defined on this card*/
+    private int actualAttackValue = 0; /* The attackValue for this attack after defense cards came into action */
+    private int defenseValue = 0;
+    private bool useAsDefenseForDeclaredAttack = false;
     public CreatureCard(string cardId, CardColour colour, int attackValue, int defenseValue) : base(cardId, colour)
     {
         this.attackValue = attackValue;
@@ -110,15 +114,14 @@ public abstract class CreatureCard : Card {
 
     public void doDeclareAttack() {
         AttackValue av = new AttackValue(this.attackValue);
+        this.actualAttackValue = this.attackValue;
+        System.Console.WriteLine($"{this.getId()} Declared attack.");
         this.OnDeclareAttack(this, new AttackEventArgs(av));
-    }
-
-    public virtual void calculateActualAttackValue(List<CreatureCard> defenseCards) {
-        
     }
 
     public void doPeformAttack() {
         AttackValue av = new AttackValue(this.attackValue);
+        System.Console.WriteLine($"{this.getId()} Peforms attack.");
         this.OnPeformAttack(this, new AttackEventArgs(av));
     }
 
@@ -138,7 +141,34 @@ public abstract class CreatureCard : Card {
         this.useAsDefenseForDeclaredAttack = false;
     }
 
+    public void decreaseDefenseValue(int iNumber) {
+        System.Console.WriteLine($"Card {this.getId()} (oldDefenseValue/decrease/newDefenseValue) {this.defenseValue}/{iNumber}/{this.defenseValue - iNumber}");
+        
+        this.defenseValue -= iNumber;
+        if (this.defenseValue <= 0) {
+            this.doDefenseExhausted();
+        }
+    }
+
+    public void decreaseActualAttackValue(int iNumber) {
+        this.actualAttackValue -= iNumber;
+    }
+
+    public virtual void calculateActualAttackValue(List<CreatureCard> defenseCards) {
+        if (defenseCards.Count == 0) {
+            this.actualAttackValue = this.attackValue;
+        }
+        
+        foreach(CreatureCard defenseCard in defenseCards) {
+            defenseCard.decreaseDefenseValue(this.attackValue);
+            this.decreaseDefenseValue(defenseCard.getAttackValue());
+            //Once a defense has taken place, the impact on the attacked player is 0.
+            this.actualAttackValue = 0;
+        }
+    }
+
     public int getAttackValue() {return this.attackValue;}
+    public int getActualAttackValue() {return this.actualAttackValue;}
     public int getDefenseValue() {return this.defenseValue;}
 }
 

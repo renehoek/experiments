@@ -37,10 +37,10 @@ public class Player  {
 
     //Events to process
     public virtual void absorbAttack(object? sender, AttackEventArgs e) {
-        CreatureCard? creatureCard = sender as CreatureCard;
-        if (creatureCard is not null) {
+        CreatureCard? attackCard = sender as CreatureCard;
+        if (attackCard is not null) {
             int iPrevHealth = this.getHealthValue();
-            int iAttackValue = creatureCard.getAttackValue();
+            int iAttackValue = attackCard.getActualAttackValue();
             this.decreaseHealthValue(iAttackValue);
             System.Console.WriteLine($"Player {this.getName()} absorbed attack (prevHealth/AttackValue/currentHealth): {iPrevHealth}/{iAttackValue}/{this.getHealthValue()}");            
         }
@@ -61,9 +61,9 @@ public class Player  {
             }
         }
 
-        CreatureCard? creatureCard = sender as CreatureCard;
-        if (creatureCard is not null) {
-            creatureCard.calculateActualAttackValue(defenseCards);
+        CreatureCard? attackCard = sender as CreatureCard;
+        if (attackCard is not null) {
+            attackCard.calculateActualAttackValue(defenseCards);
         }
     }
 

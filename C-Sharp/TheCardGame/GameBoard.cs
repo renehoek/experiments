@@ -141,14 +141,24 @@ public class GameBoard {
         }
     }
     public bool peformAttack(string cardId) {
-        (Card? card, int iPos) = Support.findCard(this.currentTurnPlayerCards, cardId);
+        Card? card;
+        int iPos;
+        try {
+            (card, iPos) = Support.findCard(this.currentTurnPlayerCards, cardId);
+        } catch (CardNotFoundException) {
+            card = null;
+            iPos = -1;
+        }
+        
         CreatureCard? creatureCard = card as CreatureCard;
+        bool attackDone = false;
         if (creatureCard is not null) {
             creatureCard.doPeformAttack();
-            return true;
-        } else {
-            return false;
-        }
+            attackDone = true;
+        } 
+
+        this.opponentPlayer.resetDefenseCards();
+        return attackDone;
     }
 
     /* Tap Energry from a land-card currently on the board 
@@ -198,18 +208,25 @@ public class GameBoard {
             creatureCard.OnDeclareAttack -= this.opponentPlayer.prepareDefense;
             creatureCard.OnPeformAttack -= this.opponentPlayer.absorbAttack;
             creatureCard.OnDefenseExhausted -= this.defenseExhausted;
-            Support.moveCard(this.opponentPlayerCards, this.opponentPlayer.discardPile, creatureCard.getId());
+            string cardId = creatureCard.getId();
+            System.Console.WriteLine($"{cardId} defense exchausted.");
+            if (Support.isOnList(this.opponentPlayerCards, cardId)) {
+                Support.moveCard(this.opponentPlayerCards, this.opponentPlayer.discardPile, cardId);
+            } else if (Support.isOnList(this.currentTurnPlayerCards, cardId)) {
+                Support.moveCard(this.currentTurnPlayerCards, this.currentTurnPlayer.discardPile, cardId);        
+            }
         }
     }
 
     public void logCurrentSituation() {
         System.Console.WriteLine("==== Current situation");
         System.Console.WriteLine($"Current turn-player: {this.currentTurnPlayer?.getName()}");
-        System.Console.WriteLine($"Player {this.player1.getName()}: (indeck/inhand/inpile) {this.player1.deck.Count}/{this.player1.inHand.Count}/{this.player1.discardPile.Count}");
-        System.Console.WriteLine($"Player {this.player2.getName()}: (indeck/inhand/inpile) {this.player2.deck.Count}/{this.player2.inHand.Count}/{this.player2.discardPile.Count}");
         System.Console.WriteLine($"Player {this.player1.getName()}: Health: {this.player1.getHealthValue()}");
         System.Console.WriteLine($"Player {this.player2.getName()}: Health: {this.player2.getHealthValue()}");
 
+        System.Console.WriteLine($"Player {this.player1.getName()}: (indeck/inhand/inpile) {this.player1.deck.Count}/{this.player1.inHand.Count}/{this.player1.discardPile.Count}");
+        System.Console.WriteLine($"Player {this.player2.getName()}: (indeck/inhand/inpile) {this.player2.deck.Count}/{this.player2.inHand.Count}/{this.player2.discardPile.Count}");
+        
         System.Console.Write($"Player {this.player1.getName()} in hand: ");
         foreach(Card card in this.player1.inHand) {
             System.Console.Write($"{card.getId()}, ");
@@ -218,6 +235,11 @@ public class GameBoard {
 
         System.Console.Write($"Player {this.player1.getName()} on the board: ");
         foreach(Card card in this.player1_cards) {
+            System.Console.Write($"{card.getId()}, ");
+        }        
+        System.Console.Write("\n");
+        System.Console.Write($"Player {this.player1.getName()} on the discard-pile: ");
+        foreach(Card card in this.player1.discardPile) {
             System.Console.Write($"{card.getId()}, ");
         }        
         System.Console.Write("\n");
@@ -230,6 +252,11 @@ public class GameBoard {
 
         System.Console.Write($"Player {this.player2.getName()} on the board: ");
         foreach(Card card in this.player2_cards) {
+            System.Console.Write($"{card.getId()}, ");
+        }        
+        System.Console.Write("\n");
+        System.Console.Write($"Player {this.player2.getName()} on the discard-pile: ");
+        foreach(Card card in this.player2.discardPile) {
             System.Console.Write($"{card.getId()}, ");
         }        
         System.Console.Write("\n");

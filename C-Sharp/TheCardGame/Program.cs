@@ -13,15 +13,15 @@ class Program
         player1_deck.Add(factory.createSorceryCard("sorcery-3", new CardColour("gray")));                
         player1_deck.Add(factory.createLandCard("land-1", new CardColour("gray")));
         player1_deck.Add(factory.createLandCard("land-2", new CardColour("red")));
-        player1_deck.Add(factory.createCreatureCard("creature-1", new CardColour("gray"), 2, 2));
-        player1_deck.Add(factory.createCreatureCard("creature-2", new CardColour("red"), 2, 2));
+        player1_deck.Add(factory.createCreatureCard("creature-1", new CardColour("gray"), 10, 4));
+        player1_deck.Add(factory.createCreatureCard("creature-2", new CardColour("red"), 10, 4));
         player1_deck.Add(factory.createSorceryCard("sorcery-7", new CardColour("red")));
         player1_deck.Add(factory.createSorceryCard("sorcery-8", new CardColour("blue")));
         player1_deck.Add(factory.createSorceryCard("sorcery-9", new CardColour("gray")));
         player1_deck.Add(factory.createLandCard("land-5", new CardColour("gray")));
         player1_deck.Add(factory.createLandCard("land-6", new CardColour("red")));
-        player1_deck.Add(factory.createCreatureCard("creature-5", new CardColour("gray"), 2, 2));
-        player1_deck.Add(factory.createCreatureCard("creature-6", new CardColour("red"), 2, 2));
+        player1_deck.Add(factory.createCreatureCard("creature-5", new CardColour("gray"), 10, 4));
+        player1_deck.Add(factory.createCreatureCard("creature-6", new CardColour("red"), 10, 4));
 
         List<Card> player2_deck = new List<Card>();
         player2_deck.Add(factory.createSorceryCard("sorcery-4", new CardColour("red")));
@@ -29,15 +29,15 @@ class Program
         player2_deck.Add(factory.createSorceryCard("sorcery-6", new CardColour("gray")));
         player2_deck.Add(factory.createLandCard("land-3", new CardColour("gray")));
         player2_deck.Add(factory.createLandCard("land-4", new CardColour("red")));
-        player2_deck.Add(factory.createCreatureCard("creature-3", new CardColour("gray"), 2, 2));
-        player2_deck.Add(factory.createCreatureCard("creature-4", new CardColour("red"), 2, 2));
+        player2_deck.Add(factory.createCreatureCard("creature-3", new CardColour("gray"), 10, 4));
+        player2_deck.Add(factory.createCreatureCard("creature-4", new CardColour("red"), 10, 4));
         player2_deck.Add(factory.createSorceryCard("sorcery-10", new CardColour("red")));
         player2_deck.Add(factory.createSorceryCard("sorcery-11", new CardColour("blue")));
         player2_deck.Add(factory.createSorceryCard("sorcery-12", new CardColour("gray")));
         player2_deck.Add(factory.createLandCard("land-7", new CardColour("gray")));
         player2_deck.Add(factory.createLandCard("land-8", new CardColour("red")));
-        player2_deck.Add(factory.createCreatureCard("creature-7", new CardColour("gray"), 2, 2));
-        player2_deck.Add(factory.createCreatureCard("creature-8", new CardColour("red"), 2, 2));
+        player2_deck.Add(factory.createCreatureCard("creature-7", new CardColour("gray"), 10, 4));
+        player2_deck.Add(factory.createCreatureCard("creature-8", new CardColour("red"), 10, 4));
 
         Player player1 = new Player("player1", 10, player1_deck);
         Player player2 = new Player("player2", 10, player2_deck);
