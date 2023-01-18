@@ -1,7 +1,5 @@
 namespace TheCardGame;
 
-
-
 public class GameBoard {
     private static GameBoard? instance;
     private static object locker = new object();
@@ -15,19 +13,27 @@ public class GameBoard {
     private List<Card> currentTurnPlayerCards;
     private List<Card> opponentPlayerCards;
 
+    private ITakeCardFromDeckStrategy takeCardFromDeckStategy;
+    private IDrawCardStrategy drawCardStrategy_player1;
+    private IDrawCardStrategy drawCardStrategy_player2;
+
     private int iTurnCnt;
 
     protected GameBoard() {              
         this.player1_cards = new List<Card>();
         this.player2_cards = new List<Card>();
 
-        this.player1 = new Player("dummy1", 0, new List<Card>());
-        this.player2 = new Player("dummy2", 0, new List<Card>());
+        this.player1 = new Player("dummy1", 0);
+        this.player2 = new Player("dummy2", 0);
         this.currentTurnPlayer = this.player1;
         this.opponentPlayer = this.player2;
         this.currentTurnPlayerCards = new List<Card>();
         this.opponentPlayerCards = new List<Card>();
         this.iTurnCnt = 0;
+
+        this.takeCardFromDeckStategy = new TakeFirstCardStrategy();
+        this.drawCardStrategy_player1 = new DrawCardStrategy();
+        this.drawCardStrategy_player2 = new DrawCardStrategy();
     }
 
     public static GameBoard GetInstance()
@@ -63,6 +69,23 @@ public class GameBoard {
         }
     }
 
+    public void setTakeCardStrategy(ITakeCardFromDeckStrategy s) {
+        this.takeCardFromDeckStategy = s;
+    }
+
+    /* Sets the DrawCard strategy to use. For convenience it returns the strategy previously in effect.*/
+    public IDrawCardStrategy? setDrawCardStrategy(IDrawCardStrategy s, Player p)  {
+        IDrawCardStrategy? currentStrategy = null;
+        if (p.getName() == this.player1.getName()) {
+            currentStrategy = this.drawCardStrategy_player1;
+            this.drawCardStrategy_player1 = s;
+        } else if (p.getName() == this.player2.getName()) {
+            currentStrategy = this.drawCardStrategy_player2;
+            this.drawCardStrategy_player2 = s;
+        }
+        return currentStrategy;
+    }
+
     private void SwapPlayer() {
         if (this.currentTurnPlayer.getName() == this.player1.getName()) {
             this.currentTurnPlayer = this.player2;
@@ -80,12 +103,37 @@ public class GameBoard {
     public void newTurn() {
         this.iTurnCnt++;
 
+        foreach(Card card in this.currentTurnPlayerCards) {
+            foreach(IEffect effect in card.effects) {
+                effect.onNewTurn(card, this.currentTurnPlayer, this.opponentPlayer, this);
+            }
+        }
+        foreach(Card card in this.opponentPlayerCards) {
+            foreach(IEffect effect in card.effects) {
+                effect.onNewTurn(card, this.currentTurnPlayer, this.opponentPlayer, this);
+            }
+        }
+
+        this.takeCardFromDeckStategy.takeCard(this);
     }
 
     public void endTurn() {
 
         this.opponentPlayer.resetDefenseCards();
         this.unTapFromAll();
+        this.currentTurnPlayer.trimCards(7);
+
+        foreach(Card card in this.currentTurnPlayerCards) {
+            foreach(IEffect effect in card.effects) {
+                effect.onEndTurn(card, this.currentTurnPlayer, this.opponentPlayer, this);
+            }
+        }
+        foreach(Card card in this.opponentPlayerCards) {
+            foreach(IEffect effect in card.effects) {
+                effect.onEndTurn(card, this.currentTurnPlayer, this.opponentPlayer, this);
+            }
+        }
+
         this.SwapPlayer();
     }
 
@@ -98,40 +146,24 @@ public class GameBoard {
         }
     }
 
-    public bool takeCard() {
-        
-        Card? card = this.currentTurnPlayer.takeCard();
-        if (card == null) {
-            System.Console.WriteLine($"{this.currentTurnPlayer.getName()} could not take card.");
-            return false;
-        } else {            
-            System.Console.WriteLine($"{this.currentTurnPlayer.getName()} took card {card.getId()} from deck into hand.");
-            return true;
-        }
+    public Player getCurrentTurnPlayer() {
+        return this.currentTurnPlayer;
     }
-
+    public Player getOpponentPlayer() {
+        return this.opponentPlayer;
+    }
+    public int getCurrentTurn() {
+        return this.iTurnCnt;
+    }
+    
     public bool drawCard(string cardId) {
-        Card? card = this.currentTurnPlayer.drawCard(cardId);
-        if (card is null) {
-            System.Console.WriteLine($"{this.currentTurnPlayer.getName()} could not draw card.");
+        if (this.currentTurnPlayer.getName() == this.player1.getName()) {
+            return this.drawCardStrategy_player1.drawCard(this, cardId);
+        } else if (this.currentTurnPlayer.getName() == this.player2.getName()) {
+            return this.drawCardStrategy_player2.drawCard(this, cardId);
+        } else {
             return false;
-        } 
-        
-        this.currentTurnPlayerCards.Add(card);
-        System.Console.WriteLine($"{this.currentTurnPlayer.getName()} draw card {card.getId()}.");
-        foreach(IEffect effect in card.effects) {
-            effect.onPlacedOnBoard(card, this.currentTurnPlayer, this.opponentPlayer, this);
         }
-
-        CreatureCard? creatureCard = card as CreatureCard;
-        if (creatureCard is not null) {
-            creatureCard.OnDeclareAttack += this.opponentPlayer.prepareDefense;
-            creatureCard.OnPeformAttack += this.opponentPlayer.absorbAttack;
-            creatureCard.OnDefenseExhausted += this.defenseExhausted;
-        }
-
-        return true;
-        
     }
 
     /* Returns the card-ids which can be used in a attack regarding the avaiable energy obtained from the land-cards. */
@@ -184,8 +216,12 @@ public class GameBoard {
         bool attackDone = false;
         if (creatureCard is not null) {
             this.logEnergyTapped();
+
             if (creatureCard.canBePlayed(this.energyTapped())) { 
                 creatureCard.doPeformAttack();
+                foreach(IEffect effect in creatureCard.effects) {
+                    effect.onAttack(creatureCard, this.currentTurnPlayer, this.opponentPlayer, this);
+                }
                 attackDone = true;
             }
         } 
@@ -240,65 +276,53 @@ public class GameBoard {
             creatureCard.OnDeclareAttack -= this.opponentPlayer.prepareDefense;
             creatureCard.OnPeformAttack -= this.opponentPlayer.absorbAttack;
             creatureCard.OnDefenseExhausted -= this.defenseExhausted;
+            Player owner = creatureCard.owner;
             string cardId = creatureCard.getId();
             System.Console.WriteLine($"{cardId} defense exchausted.");
-            if (Support.isOnList(this.opponentPlayerCards, cardId)) {
+            if (owner.getName()== this.opponentPlayer.getName()) {
                 Support.moveCard(this.opponentPlayerCards, this.opponentPlayer.discardPile, cardId);
-            } else if (Support.isOnList(this.currentTurnPlayerCards, cardId)) {
+            } else if (owner.getName()== this.currentTurnPlayer.getName()) {
                 Support.moveCard(this.currentTurnPlayerCards, this.currentTurnPlayer.discardPile, cardId);        
+            }
+            foreach(IEffect effect in creatureCard.effects) {
+                effect.onDisposed(creatureCard, this.currentTurnPlayer, this.opponentPlayer, this);
             }
         }
     }
 
+    /* These are methods just for Demo stuff */
+    public void setupACurrentSituation() {
+        
+        for(int cnt = 0; cnt < 6; cnt++) {
+            this.player1.takeCard();            
+        }
+        for(int cnt = 0; cnt < 6; cnt++) {
+            this.player2.takeCard();            
+        }
+    }
+
     public void logEnergyTapped() {
-        System.Console.WriteLine($"Current turn-player: {this.currentTurnPlayer?.getName()}, energy-tapped: {this.energyTapped()}");
+        System.Console.WriteLine($"Current turn-player: {this.currentTurnPlayer.getName()}, energy-tapped: {this.energyTapped()}");
     }
 
     public void logCurrentSituation() {
         System.Console.WriteLine("==== Current situation");
-        System.Console.WriteLine($"Current turn-player: {this.currentTurnPlayer?.getName()}, Turn: {this.iTurnCnt}, energy-tapped: {this.energyTapped()}");
+        System.Console.WriteLine($"Current turn-player: {this.currentTurnPlayer.getName()}, Turn: {this.iTurnCnt}, energy-tapped: {this.energyTapped()}");
         System.Console.WriteLine($"Player {this.player1.getName()}: Health: {this.player1.getHealthValue()}");
         System.Console.WriteLine($"Player {this.player2.getName()}: Health: {this.player2.getHealthValue()}");
 
-        System.Console.WriteLine($"Player {this.player1.getName()}: (indeck/inhand/inpile) {this.player1.deck.Count}/{this.player1.inHand.Count}/{this.player1.discardPile.Count}");
-        System.Console.WriteLine($"Player {this.player2.getName()}: (indeck/inhand/inpile) {this.player2.deck.Count}/{this.player2.inHand.Count}/{this.player2.discardPile.Count}");
-        
-        System.Console.Write($"Player {this.player1.getName()} in hand: ");
-        foreach(Card card in this.player1.inHand) {
-            System.Console.Write($"{card.getId()}, ");
-        }
-        System.Console.Write("\n");
+        System.Console.WriteLine($"Player {this.player1.getName()}: (ontheboard/indeck/inhand/indiscard-pile) {this.player1_cards.Count}/{this.player1.deck.Count}/{this.player1.inHand.Count}/{this.player1.discardPile.Count}");        
+        System.Console.WriteLine($"Player {this.player1.getName()} on the board: " + Support.CardIdsHumanFormatted(this.player1_cards));
+        System.Console.WriteLine($"Player {this.player1.getName()} in deck: " + Support.CardIdsHumanFormatted(this.player1.deck));        
+        System.Console.WriteLine($"Player {this.player1.getName()} in hand: " + Support.CardIdsHumanFormatted(this.player1.inHand));        
+        System.Console.WriteLine($"Player {this.player1.getName()} on the discard-pile: " + Support.CardIdsHumanFormatted(this.player1.discardPile));
 
-        System.Console.Write($"Player {this.player1.getName()} on the board: ");
-        foreach(Card card in this.player1_cards) {
-            System.Console.Write($"{card.getId()}, ");
-        }        
-        System.Console.Write("\n");
-        System.Console.Write($"Player {this.player1.getName()} on the discard-pile: ");
-        foreach(Card card in this.player1.discardPile) {
-            System.Console.Write($"{card.getId()}, ");
-        }        
-        System.Console.Write("\n");
-
-        System.Console.Write($"Player {this.player2?.getName()} in hand: ");
-        foreach(Card card in this.player2.inHand) {
-            System.Console.Write($"{card.getId()}, ");
-        } 
-        System.Console.Write("\n");
-
-        System.Console.Write($"Player {this.player2.getName()} on the board: ");
-        foreach(Card card in this.player2_cards) {
-            System.Console.Write($"{card.getId()}, ");
-        }        
-        System.Console.Write("\n");
-        System.Console.Write($"Player {this.player2.getName()} on the discard-pile: ");
-        foreach(Card card in this.player2.discardPile) {
-            System.Console.Write($"{card.getId()}, ");
-        }        
-        System.Console.Write("\n");
+        System.Console.WriteLine($"Player {this.player2.getName()}: (ontheboard/indeck/inhand/indiscard-pile) {this.player2_cards.Count}/{this.player2.deck.Count}/{this.player2.inHand.Count}/{this.player2.discardPile.Count}");
+        System.Console.WriteLine($"Player {this.player2.getName()} on the board: " + Support.CardIdsHumanFormatted(this.player2_cards));
+        System.Console.WriteLine($"Player {this.player2.getName()} in deck: " + Support.CardIdsHumanFormatted(this.player2.deck));        
+        System.Console.WriteLine($"Player {this.player2.getName()} in hand: " + Support.CardIdsHumanFormatted(this.player2.inHand));        
+        System.Console.WriteLine($"Player {this.player2.getName()} on the discard-pile: " + Support.CardIdsHumanFormatted(this.player2.discardPile));
+                
         System.Console.WriteLine("==== END Current situation");
     }
-
-
-   
 }

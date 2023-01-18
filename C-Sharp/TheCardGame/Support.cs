@@ -72,4 +72,9 @@ static class Support {
             return false;
         }
     }
+
+    static public string CardIdsHumanFormatted(List<Card> sourceList) {    
+        List<string> cardIds = sourceList.ConvertAll<string>(c => c.getId());        
+        return String.Join<string>(", ", cardIds);
+    }
 }

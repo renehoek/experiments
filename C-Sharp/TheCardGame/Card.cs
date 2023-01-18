@@ -11,9 +11,13 @@ public struct CardColour {
 
 public interface IEffect {
     
+    public void onTookFromDeck(Card sourcecard, Player currentTurnPlayer, Player opponentPlayer, GameBoard theBoard) {}
     public void onPlacedOnBoard(Card sourcecard, Player currentTurnPlayer, Player opponentPlayer, GameBoard theBoard) {}
     public void onAttack(Card sourcecard, Player currentTurnPlayer, Player opponentPlayer, GameBoard theBoard) {}
     public void onDisposed(Card sourcecard, Player currentTurnPlayer, Player opponentPlayer, GameBoard theBoard) {}
+
+    public void onNewTurn(Card sourcecard, Player currentTurnPlayer, Player opponentPlayer, GameBoard theBoard) {}
+    public void onEndTurn(Card sourcecard, Player currentTurnPlayer, Player opponentPlayer, GameBoard theBoard) {}
 }
 
 public interface IDetermineAttackValue {
@@ -24,6 +28,7 @@ public interface IDetermineAttackValue {
 public abstract class Card {
     public CardColour colour;    
     public List<IEffect> effects;
+    public Player owner;
 
     private int energyCost = 0; // The amount of energy required to play this card.
     private string description; 
@@ -31,9 +36,10 @@ public abstract class Card {
 
     public event EventHandler<CardEventArgs> OnIsSummoned = delegate { };
 
-    public Card(string cardId, CardColour colour) {
+    public Card(string cardId, CardColour colour, Player owner) {
         this.colour = colour;
         this.cardId = cardId;
+        this.owner = owner;
         this.effects = new List<IEffect>();
         this.description = string.Empty;
     }
@@ -65,7 +71,7 @@ public abstract class LandCard : Card
     private int _energyLevel = 0;
     private bool _energyInUse = false;
 
-    public LandCard(string cardId, CardColour colour, int energyLevel) : base(cardId, colour)
+    public LandCard(string cardId, CardColour colour, Player owner, int energyLevel) : base(cardId, colour, owner)
     {
         this._energyLevel = energyLevel;
     }
@@ -92,7 +98,7 @@ public abstract class LandCard : Card
 public abstract class SorceryCard : Card
 {
 
-    public SorceryCard(string cardId, CardColour colour) : base(cardId, colour)
+    public SorceryCard(string cardId, CardColour colour, Player owner) : base(cardId, colour, owner)
     {
        
     }
@@ -113,7 +119,7 @@ public abstract class CreatureCard : Card, IDetermineAttackValue {
     private int actualAttackValue = 0; /* The attackValue for this attack after defense cards came into action */
     private int defenseValue = 0;
     private bool useAsDefenseForDeclaredAttack = false;
-    public CreatureCard(string cardId, CardColour colour, int attackValue, int defenseValue) : base(cardId, colour)
+    public CreatureCard(string cardId, CardColour colour, Player owner, int attackValue, int defenseValue) : base(cardId, colour, owner)
     {
         this.attackValue = attackValue;
         this.defenseValue = defenseValue;

@@ -9,12 +9,16 @@ public class Player  {
 
     private List<string>? defenseCardIdsForDeclaredAttack;
     
-    public Player(string name, int initialLife, List<Card> deck) {        
-        this.deck = deck;
+    public Player(string name, int initialLife) {        
+        this.deck = new List<Card>();
         this.discardPile = new List<Card>();
         this.inHand = new List<Card>();
         this.healthValue = initialLife;        
         this.name = name;
+    }
+
+    public void setDeck(List<Card> deck)  {
+        this.deck = deck;
     }
 
     public string getName() {
@@ -69,39 +73,55 @@ public class Player  {
 
     /* Take the first card from his deck and put it in his hand */
     public Card? takeCard(){
-        Card? cardTaken = Support.moveCard(this.deck, this.inHand, 0);
+        Card? cardTaken = Support.moveCard(this.deck, this.inHand, 0);                
         return cardTaken;
     }
 
 
     /* Draw a card from his hand */
     public Card? drawCard(string cardId) {
-        foreach(Card card in this.inHand) {
-            if (card.getId() == cardId ) {
-                Support.removeCard(this.inHand, card.getId());
-                return card;
-            }
+        Card card;
+        int iPos;
+        
+        try {
+            (card, iPos) = Support.findCard(this.inHand, cardId);
+        } catch (CardNotFoundException) {
+            return null;
         }
-        return null;
+
+        Support.removeCard(this.inHand, card.getId());
+        return card;                        
     }
 
 
     public Card disposeRandomCard() {
         Random rd = new Random();
         int r_ = rd.Next(0, this.inHand.Count);
+        GameBoard gb = GameBoard.GetInstance();
         Card cardDisposed = Support.moveCard(this.inHand, this.discardPile, r_);
+        foreach(IEffect effect in cardDisposed.effects) {
+            effect.onDisposed(cardDisposed, gb.getCurrentTurnPlayer(), gb.getOpponentPlayer(), gb);
+        }
         return cardDisposed;        
     }
 
     public void trimCards(int maxCards) {
         if (this.inHand.Count <= maxCards) {
+            System.Console.WriteLine($"{this.getName()} trimmed 0 cards into discard pile.");
             return;
         }
         
+        GameBoard gb = GameBoard.GetInstance();
         bool stillToTrim = this.inHand.Count > maxCards;
+        int cnt = 0;
         while (stillToTrim) {
-            Support.moveCard(this.inHand, this.discardPile, 0);
+            Card cardDisposed = Support.moveCard(this.inHand, this.discardPile, 0);                        
+            cnt++;
+            foreach(IEffect effect in cardDisposed.effects) {
+                effect.onDisposed(cardDisposed, gb.getCurrentTurnPlayer(), gb.getOpponentPlayer(), gb);
+            }
             stillToTrim = this.inHand.Count > maxCards;
         }        
+        System.Console.WriteLine($"{this.getName()} trimmed {cnt} cards into discard pile.");
     }    
 }
