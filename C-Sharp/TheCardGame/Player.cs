@@ -25,6 +25,8 @@ public class Player  {
     private string name = string.Empty;
 
     private List<string>? defenseCardIdsForDeclaredAttack;
+
+    private int doNotDefendSpellsCnt = 0;
     
     public Player(string name, int initialLife) {        
         this.deck = new List<Card>();
@@ -61,6 +63,14 @@ public class Player  {
         this.defenseCardIdsForDeclaredAttack = null;
     }
 
+    public void setSpellAllowedToDefense(bool mayDefend) {
+        if (!mayDefend) {
+            this.doNotDefendSpellsCnt++;
+        } else {
+            this.doNotDefendSpellsCnt--;
+        }        
+    }
+
     //Events to process
     public virtual void absorbAttack(object? sender, AttackEventArgs e) {
         CreatureCard? attackCard = sender as CreatureCard;
@@ -75,21 +85,24 @@ public class Player  {
     public virtual void prepareDefense(object? sender, AttackEventArgs e) {
         
         List<CreatureCard> defenseCards = new List<CreatureCard>();
-        GameBoard board = GameBoard.GetInstance();
-        List<Card> cardsOnBoard = board.getCardsOnBoard(this);
-        if (this.defenseCardIdsForDeclaredAttack is not null) {
-            foreach(string cardId in this.defenseCardIdsForDeclaredAttack) {
-                Card foundCard;
-                int iPos;
+        
+        if (0 == this.doNotDefendSpellsCnt) {
+            GameBoard board = GameBoard.GetInstance();
+            List<Card> cardsOnBoard = board.getCardsOnBoard(this);
+            if (this.defenseCardIdsForDeclaredAttack is not null) {
+                foreach(string cardId in this.defenseCardIdsForDeclaredAttack) {
+                    Card foundCard;
+                    int iPos;
 
-                try {
-                    (foundCard, iPos) = Support.findCard(cardsOnBoard, cardId);
-                } catch (CardNotFoundException) {
-                    continue;
-                } 
-                CreatureCard? creatureDefenseCard = foundCard as CreatureCard;
-                if (creatureDefenseCard is not null) {
-                    defenseCards.Add(creatureDefenseCard);
+                    try {
+                        (foundCard, iPos) = Support.findCard(cardsOnBoard, cardId);
+                    } catch (CardNotFoundException) {
+                        continue;
+                    } 
+                    CreatureCard? creatureDefenseCard = foundCard as CreatureCard;
+                    if (creatureDefenseCard is not null) {
+                        defenseCards.Add(creatureDefenseCard);
+                    }
                 }
             }
         }

@@ -33,9 +33,7 @@ public abstract class Card {
     private int energyCost = 0; // The amount of energy required to play this card.
     private string description; 
     private string cardId; /* The unique id of this card in the game. */
-
-    public event EventHandler<CardEventArgs> OnIsSummoned = delegate { };
-
+    
     public Card(string cardId, CardColour colour, Player owner) {
         this.colour = colour;
         this.cardId = cardId;
@@ -102,13 +100,6 @@ public abstract class SorceryCard : Card
     {
        
     }
-
-    enum Spelllifetime {
-        Instantaneous,
-        Permanent
-    };
-    Spelllifetime duration;
-
 }
 
 public abstract class CreatureCard : Card, IDetermineAttackValue {
@@ -118,7 +109,7 @@ public abstract class CreatureCard : Card, IDetermineAttackValue {
     private int attackValue = 0; /* The attackValue defined on this card*/
     private int actualAttackValue = 0; /* The attackValue for this attack after defense cards came into action */
     private int defenseValue = 0;
-    private bool useAsDefenseForDeclaredAttack = false;
+
     public CreatureCard(string cardId, CardColour colour, Player owner, int attackValue, int defenseValue) : base(cardId, colour, owner)
     {
         this.attackValue = attackValue;
@@ -141,29 +132,13 @@ public abstract class CreatureCard : Card, IDetermineAttackValue {
         System.Console.WriteLine($"{this.getId()} Peforms attack.");
         this.OnPeformAttack(this, new AttackEventArgs(av));
     }
-
-    public void doDefenseExhausted() {
-        this.OnDefenseExhausted(this, new DefenseExhaustedArgs());
-    }
-
-    public void useAsDefense(){
-        this.useAsDefenseForDeclaredAttack = true;
-    }
-
-    public bool isDefender() {
-        return this.useAsDefenseForDeclaredAttack;
-    }
-
-    public void resetIsDefender() {
-        this.useAsDefenseForDeclaredAttack = false;
-    }
-
+    
     public void decreaseDefenseValue(int iNumber) {
         System.Console.WriteLine($"Card {this.getId()} (oldDefenseValue/decrease/newDefenseValue) {this.defenseValue}/{iNumber}/{this.defenseValue - iNumber}");
         
         this.defenseValue -= iNumber;
         if (this.defenseValue <= 0) {
-            this.doDefenseExhausted();
+            this.OnDefenseExhausted(this, new DefenseExhaustedArgs());
         }
     }
 
@@ -188,15 +163,6 @@ public abstract class CreatureCard : Card, IDetermineAttackValue {
     public int getAttackValue() {return this.attackValue;}
     public int getActualAttackValue() {return this.actualAttackValue;}
     public int getDefenseValue() {return this.defenseValue;}
-}
-
-
-
-public class CardEventArgs : EventArgs {
-    public List<IEffect> effects {get; set;}
-    public CardEventArgs(List<IEffect> effects){
-        this.effects = effects;
-    }
 }
 
 public class AttackValue {

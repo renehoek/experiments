@@ -13,7 +13,8 @@ public class GameBoard {
     private List<Card> currentTurnPlayerCards;
     private List<Card> opponentPlayerCards;
 
-    private ITakeCardFromDeckStrategy takeCardFromDeckStategy;
+    private ITakeCardFromDeckStrategy takeCardFromDeckStategy_player1;
+    private ITakeCardFromDeckStrategy takeCardFromDeckStategy_player2;
     private IDrawCardStrategy drawCardStrategy_player1;
     private IDrawCardStrategy drawCardStrategy_player2;
 
@@ -33,7 +34,8 @@ public class GameBoard {
         this.iTurnCnt = 0;
         this.gameEnded = false;
 
-        this.takeCardFromDeckStategy = new TakeFirstCardStrategy();
+        this.takeCardFromDeckStategy_player1 = new TakeFirstCardStrategy();
+        this.takeCardFromDeckStategy_player2 = new TakeFirstCardStrategy();
         this.drawCardStrategy_player1 = new DrawCardStrategy();
         this.drawCardStrategy_player2 = new DrawCardStrategy();
     }
@@ -75,19 +77,25 @@ public class GameBoard {
 
     }
 
-    public void setTakeCardStrategy(ITakeCardFromDeckStrategy s) {
-        this.takeCardFromDeckStategy = s;
+    /* Sets the TakeCard strategy to use. For convenience it returns the strategy previously in effect.*/
+    public ITakeCardFromDeckStrategy? setTakeCardStrategy(ITakeCardFromDeckStrategy s, Player p) {
+        return this.setStrategy<ITakeCardFromDeckStrategy>(s, p, this.takeCardFromDeckStategy_player1, this.takeCardFromDeckStategy_player2);                
     }
 
     /* Sets the DrawCard strategy to use. For convenience it returns the strategy previously in effect.*/
     public IDrawCardStrategy? setDrawCardStrategy(IDrawCardStrategy s, Player p)  {
-        IDrawCardStrategy? currentStrategy = null;
+        return this.setStrategy<IDrawCardStrategy>(s, p, this.drawCardStrategy_player1, this.drawCardStrategy_player2);               
+    }
+
+    private T? setStrategy<T>(T s, Player p, T a1, T a2) {
+
+        T? currentStrategy = default(T);
         if (p.getName() == this.player1.getName()) {
-            currentStrategy = this.drawCardStrategy_player1;
-            this.drawCardStrategy_player1 = s;
+            currentStrategy = a1;
+            a1 = s;
         } else if (p.getName() == this.player2.getName()) {
-            currentStrategy = this.drawCardStrategy_player2;
-            this.drawCardStrategy_player2 = s;
+            currentStrategy = a2;
+            a2 = s;
         }
         return currentStrategy;
     }
@@ -123,7 +131,11 @@ public class GameBoard {
             }
         }
 
-        this.takeCardFromDeckStategy.takeCard(this);        
+        if (this.currentTurnPlayer.getName() == this.player1.getName()) {
+            this.takeCardFromDeckStategy_player1.takeCard(this);
+        } else if (this.currentTurnPlayer.getName() == this.player2.getName()) {
+            this.takeCardFromDeckStategy_player2.takeCard(this);
+        }
         return true;
     }
 
@@ -174,21 +186,6 @@ public class GameBoard {
         } else {
             return false;
         }
-    }
-
-    /* Returns the card-ids which can be used in a attack regarding the avaiable energy obtained from the land-cards. */
-    public List<string> energyLevelSufficientForCards() {
-        int iAvailEnergyLevel = this.energyTapped();
-        List<string> cardIds = new List<string>();
-        foreach(Card card in this.currentTurnPlayerCards) {
-            if (card is LandCard) {
-                continue;
-            }
-            if (card.canBePlayed(iAvailEnergyLevel)) {
-                cardIds.Add(card.getId());
-            }
-        }
-        return cardIds;
     }
 
     public bool declareAttack(string cardId, List<string> opponentDefenseCardIds) {
