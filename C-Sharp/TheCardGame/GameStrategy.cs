@@ -38,7 +38,7 @@ class DrawCardStrategy: IDrawCardStrategy {
         Player opponentPlayer = gs.getOpponentPlayer();
         Card? card = currentTurnPlayer.drawCard(cardId);
         if (card is null) {
-            System.Console.WriteLine($"{currentTurnPlayer.getName()} could not draw card.");
+            System.Console.WriteLine($"{currentTurnPlayer.getName()} Didn't draw card {cardId}: Not in his hand.");
             return false;
         } 
         

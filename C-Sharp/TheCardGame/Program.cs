@@ -82,11 +82,11 @@ class Program
     
 
     static void RunADemoGame() {
-        GameBoard gb = GameBoard.GetInstance();
+        GameBoard gb = GameBoard.GetInstance();        
         System.Console.WriteLine("== Starting the demo game!");
 
-        //Player 1 - Turn 1        
-        gb.newTurn();
+        //Player 1 - Turn 1                
+        if (!gb.newTurn()) {return;}
         System.Console.WriteLine($"New Turn: {gb.getCurrentTurn()}");        
         gb.drawCard("land-1");
         gb.logCurrentSituation();       
@@ -94,7 +94,7 @@ class Program
        
 
         //Player 2  - Turn 2
-        gb.newTurn();
+        if (!gb.newTurn()) {return;}
         System.Console.WriteLine($"New Turn: {gb.getCurrentTurn()}");        
         gb.drawCard("land-3");
         gb.logCurrentSituation();
@@ -102,7 +102,7 @@ class Program
         
 
         //Player 1  - Turn 3
-        gb.newTurn();
+        if (!gb.newTurn()) {return;}
         System.Console.WriteLine($"New Turn: {gb.getCurrentTurn()}");        
         gb.drawCard("creature-2");
         gb.logCurrentSituation();
@@ -110,7 +110,7 @@ class Program
         
 
         //Player 2  - Turn 4
-        gb.newTurn();
+        if (!gb.newTurn()) {return;}
         System.Console.WriteLine($"New Turn: {gb.getCurrentTurn()}");
         gb.tapFromCard("land-3");
         gb.drawCard("creature-4");
@@ -121,11 +121,59 @@ class Program
         
 
         //Player 1  - Turn 5
-        gb.newTurn();
+        if (!gb.newTurn()) {return;}
         System.Console.WriteLine($"New Turn: {gb.getCurrentTurn()}");
         gb.drawCard("creature-1");
         gb.declareAttack("creature-1");
         gb.peformAttack("creature-1");
+        gb.logCurrentSituation();
+        gb.endTurn();
+
+        //Player 2  - Turn 6
+        if (!gb.newTurn()) {return;}
+        System.Console.WriteLine($"New Turn: {gb.getCurrentTurn()}");
+        gb.drawCard("land-4");
+        gb.tapFromCard("land-4");        
+        gb.tapFromCard("land-3");        
+        gb.declareAttack("creature-4");
+        gb.peformAttack("creature-4");
+        gb.logCurrentSituation();
+        gb.endTurn();
+
+        //Player 1  - Turn 7
+        if (!gb.newTurn()) {return;}
+        System.Console.WriteLine($"New Turn: {gb.getCurrentTurn()}");
+        gb.drawCard("sorcery-2");
+        gb.tapFromCard("land-1");                
+        gb.declareAttack("creature-1");
+        gb.peformAttack("creature-1");
+        gb.logCurrentSituation();
+        gb.endTurn();
+
+        //Player 2  - Turn 8
+        if (!gb.newTurn()) {return;}
+        System.Console.WriteLine($"New Turn: {gb.getCurrentTurn()}");
+        gb.drawCard("creature-3");
+        gb.tapFromCard("land-3");                
+        gb.tapFromCard("land-4");                
+        gb.declareAttack("creature-3");
+        gb.peformAttack("creature-3");
+        gb.logCurrentSituation();
+        gb.endTurn();
+
+        //Player 1  - Turn 9
+        if (!gb.newTurn()) {return;}
+        System.Console.WriteLine($"New Turn: {gb.getCurrentTurn()}");        
+        gb.logCurrentSituation();
+        gb.endTurn();
+
+        //Player 2  - Turn 10
+        if (!gb.newTurn()) {return;}
+        System.Console.WriteLine($"New Turn: {gb.getCurrentTurn()}");
+        gb.drawCard("sorcery-6");
+        gb.tapFromCard("land-3");
+        gb.declareAttack("creature-4");
+        gb.peformAttack("creature-4");
         gb.logCurrentSituation();
         gb.endTurn();
         

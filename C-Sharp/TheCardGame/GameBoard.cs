@@ -18,6 +18,7 @@ public class GameBoard {
     private IDrawCardStrategy drawCardStrategy_player2;
 
     private int iTurnCnt;
+    private bool gameEnded;
 
     protected GameBoard() {              
         this.player1_cards = new List<Card>();
@@ -30,6 +31,7 @@ public class GameBoard {
         this.currentTurnPlayerCards = new List<Card>();
         this.opponentPlayerCards = new List<Card>();
         this.iTurnCnt = 0;
+        this.gameEnded = false;
 
         this.takeCardFromDeckStategy = new TakeFirstCardStrategy();
         this.drawCardStrategy_player1 = new DrawCardStrategy();
@@ -67,6 +69,10 @@ public class GameBoard {
             this.opponentPlayer = this.player1;
             this.opponentPlayerCards = this.player1_cards;            
         }
+
+        this.player1.OnDied += this.playerDied;
+        this.player2.OnDied += this.playerDied;
+
     }
 
     public void setTakeCardStrategy(ITakeCardFromDeckStrategy s) {
@@ -100,7 +106,10 @@ public class GameBoard {
         }
     }
 
-    public void newTurn() {
+    public bool newTurn() {
+        if (this.gameEnded) {
+            return false;
+        }
         this.iTurnCnt++;
 
         foreach(Card card in this.currentTurnPlayerCards) {
@@ -114,7 +123,8 @@ public class GameBoard {
             }
         }
 
-        this.takeCardFromDeckStategy.takeCard(this);
+        this.takeCardFromDeckStategy.takeCard(this);        
+        return true;
     }
 
     public void endTurn() {
@@ -187,7 +197,15 @@ public class GameBoard {
     }
 
     public bool declareAttack(string cardId) {
-        (Card? card, int iPos) = Support.findCard(this.currentTurnPlayerCards, cardId);
+        Card card;
+        int iPos;
+        try {
+            (card, iPos) = Support.findCard(this.currentTurnPlayerCards, cardId);
+        } catch (CardNotFoundException) {
+            System.Console.WriteLine($"Player {this.currentTurnPlayer.getName()} could not declare attack with card {cardId}. Not on the board.");
+            return false;
+        }
+
         CreatureCard? creatureCard = card as CreatureCard;
         this.logEnergyTapped();
 
@@ -208,6 +226,7 @@ public class GameBoard {
         try {
             (card, iPos) = Support.findCard(this.currentTurnPlayerCards, cardId);
         } catch (CardNotFoundException) {
+            System.Console.WriteLine($"Player {this.currentTurnPlayer.getName()} could not peform attack with card {cardId}. Not on the board.");
             card = null;
             iPos = -1;
         }
@@ -234,19 +253,23 @@ public class GameBoard {
     public int tapFromCard(string cardId) {
         Card cardFound;
         int iPos;
+        int iTappedEnergy = 0;
 
         try {
             (cardFound, iPos) = Support.findCard(this.currentTurnPlayerCards, cardId);
         } catch (CardNotFoundException) {
+            System.Console.WriteLine($"Player {this.currentTurnPlayer.getName()} could not tap from card {cardId}. Not on the board.");
             return 0;
         }
         
         LandCard? landCardFound = cardFound as LandCard;
         if (landCardFound is not null && !landCardFound.isTapped()) {
-            return landCardFound.tapEnergy();            
+            iTappedEnergy = landCardFound.tapEnergy();            
         } else {
-            return 0;
+            iTappedEnergy = 0;
         }        
+        System.Console.WriteLine($"Player {this.currentTurnPlayer.getName()} tapped from card {cardId} energy: {iTappedEnergy}");
+        return iTappedEnergy;
     }
 
     public void unTapFromAll() {
@@ -287,6 +310,20 @@ public class GameBoard {
             foreach(IEffect effect in creatureCard.effects) {
                 effect.onDisposed(creatureCard, this.currentTurnPlayer, this.opponentPlayer, this);
             }
+        }
+    }
+
+    public void playerDied(object? sender, PlayerDiedEventArgs e) {
+        Player? player = sender as Player;
+        if (player is not null) {
+            player.OnDied -= this.playerDied;
+            System.Console.WriteLine($"Player {player.getName()} died. Health: {e.getHealth()}, {e.getReason()}");
+            if (player.getName() == this.player1.getName()) {
+                System.Console.WriteLine($"Player {this.player2.getName()} is the winner!");
+            } else {
+                System.Console.WriteLine($"Player {this.player1.getName()} is the winner!");
+            }
+            this.gameEnded = true;
         }
     }
 

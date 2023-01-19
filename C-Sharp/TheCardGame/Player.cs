@@ -1,5 +1,22 @@
 namespace TheCardGame;
 
+public class PlayerDiedEventArgs : EventArgs {
+    private int _health;
+    private string _reason;
+    public PlayerDiedEventArgs(int health, string reason){
+        this._health = health;
+        this._reason = reason;
+    }
+
+    public int getHealth() {
+        return this._health;
+    }
+    public string getReason() {
+        return this._reason;
+    }
+}
+
+
 public class Player  {
     public List<Card> deck;
     public List<Card> discardPile;
@@ -17,6 +34,8 @@ public class Player  {
         this.name = name;
     }
 
+    public event EventHandler<PlayerDiedEventArgs> OnDied = delegate {};
+
     public void setDeck(List<Card> deck)  {
         this.deck = deck;
     }
@@ -27,6 +46,9 @@ public class Player  {
 
     public void decreaseHealthValue(int iValue){
         this.healthValue -= iValue;
+        if (this.healthValue <= 0) {
+            this.OnDied(this, new PlayerDiedEventArgs(this.healthValue, "Health below or is zero"));
+        }
     }    
     public int getHealthValue() {
         return this.healthValue;
@@ -57,7 +79,14 @@ public class Player  {
         List<Card> cardsOnBoard = board.getCardsOnBoard(this);
         if (this.defenseCardIdsForDeclaredAttack is not null) {
             foreach(string cardId in this.defenseCardIdsForDeclaredAttack) {
-                (Card foundCard, int iPos) = Support.findCard(cardsOnBoard, cardId);
+                Card foundCard;
+                int iPos;
+
+                try {
+                    (foundCard, iPos) = Support.findCard(cardsOnBoard, cardId);
+                } catch (CardNotFoundException) {
+                    continue;
+                } 
                 CreatureCard? creatureDefenseCard = foundCard as CreatureCard;
                 if (creatureDefenseCard is not null) {
                     defenseCards.Add(creatureDefenseCard);
@@ -73,7 +102,11 @@ public class Player  {
 
     /* Take the first card from his deck and put it in his hand */
     public Card? takeCard(){
-        Card? cardTaken = Support.moveCard(this.deck, this.inHand, 0);                
+        Card? cardTaken = Support.moveCard(this.deck, this.inHand, 0);
+
+        if (cardTaken is null) {
+            this.OnDied(this, new PlayerDiedEventArgs(this.healthValue, "No more cards in deck"));
+        }
         return cardTaken;
     }
 
