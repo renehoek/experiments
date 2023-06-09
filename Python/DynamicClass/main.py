@@ -17,7 +17,7 @@ def main():
     p = Person("Frank")
     print("{p}".format(p=p.sayHello()))
 
-    print(Fraction(3, 30))
+    print(Fraction(15, 30))
 
     fr = Fraction(10, 50)
     fr.gcd(10, 20)

@@ -4,6 +4,12 @@ class Fraction(object):
 
     @staticmethod
     def gcd(a, b):
+        """
+        Returns the common division number
+        :param a:
+        :param b:
+        :return:
+        """
         while b != 0:
             a, b = b, a % b
         return a
