@@ -32,7 +32,7 @@ def main():
         result = start_the_count_elegant_solution(SpaceCounterWorker, PathInputData, {'datadir': tmpdir})
         print("Number of spaces: {r}".format(r=result))
 
-        urls = ["https://www.nu.nl", "https://www.ad.nl", "https://www.rvhhosting.nl"]
+        urls = ["https://www.nu.nl", "https://www.ad.nl"]
         result = start_the_count_elegant_solution(LineCounterWorker, WebsiteInputData, {'urls': urls})
         print("Number of lines: {r}".format(r=result))
 
