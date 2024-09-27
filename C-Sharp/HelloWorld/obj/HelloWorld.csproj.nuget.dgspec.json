@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "/Users/renevanhoek/Library/CloudStorage/OneDrive-HogeschoolRotterdam/Documents/CodeVoorbeelden/Experiments/C-Sharp/HelloWorld/HelloWorld.csproj": {}
+    "C:\\Users\\HoeRM\\OneDrive - Hogeschool Rotterdam\\Documents\\CodeVoorbeelden\\Experiments\\C-Sharp\\HelloWorld\\HelloWorld.csproj": {}
   },
   "projects": {
-    "/Users/renevanhoek/Library/CloudStorage/OneDrive-HogeschoolRotterdam/Documents/CodeVoorbeelden/Experiments/C-Sharp/HelloWorld/HelloWorld.csproj": {
+    "C:\\Users\\HoeRM\\OneDrive - Hogeschool Rotterdam\\Documents\\CodeVoorbeelden\\Experiments\\C-Sharp\\HelloWorld\\HelloWorld.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/renevanhoek/Library/CloudStorage/OneDrive-HogeschoolRotterdam/Documents/CodeVoorbeelden/Experiments/C-Sharp/HelloWorld/HelloWorld.csproj",
+        "projectUniqueName": "C:\\Users\\HoeRM\\OneDrive - Hogeschool Rotterdam\\Documents\\CodeVoorbeelden\\Experiments\\C-Sharp\\HelloWorld\\HelloWorld.csproj",
         "projectName": "HelloWorld",
-        "projectPath": "/Users/renevanhoek/Library/CloudStorage/OneDrive-HogeschoolRotterdam/Documents/CodeVoorbeelden/Experiments/C-Sharp/HelloWorld/HelloWorld.csproj",
-        "packagesPath": "/Users/renevanhoek/.nuget/packages/",
-        "outputPath": "/Users/renevanhoek/Library/CloudStorage/OneDrive-HogeschoolRotterdam/Documents/CodeVoorbeelden/Experiments/C-Sharp/HelloWorld/obj/",
+        "projectPath": "C:\\Users\\HoeRM\\OneDrive - Hogeschool Rotterdam\\Documents\\CodeVoorbeelden\\Experiments\\C-Sharp\\HelloWorld\\HelloWorld.csproj",
+        "packagesPath": "C:\\Users\\HoeRM\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\HoeRM\\OneDrive - Hogeschool Rotterdam\\Documents\\CodeVoorbeelden\\Experiments\\C-Sharp\\HelloWorld\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "/Users/renevanhoek/.nuget/NuGet/NuGet.Config"
+          "C:\\Users\\HoeRM\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net7.0"
@@ -53,7 +53,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/7.0.200/RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.405\\RuntimeIdentifierGraph.json"
         }
       }
     }

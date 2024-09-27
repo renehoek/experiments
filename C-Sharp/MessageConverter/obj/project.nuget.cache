@@ -1,8 +1,13 @@
 {
   "version": 2,
-  "dgSpecHash": "OV/PNCZMPXL3/4xOyZaATapsvqThGcPgyciWSnrhasoVatEZ/Vf2SxhYc3eXNMoRmKmDMS5oWUBjUbOjM5WYoQ==",
+  "dgSpecHash": "0p8sbC5CX7lRDeK8Lzd9NQkgNuWPT4IBIQ+MRxj5KvFTDC+Z9+QgzC0ipSh6Pitu2iAPDy19UCwAGxhHKtxeJw==",
   "success": true,
-  "projectFilePath": "/Users/renevanhoek/workspace/Experiments/C-Sharp/MessageConverter/MessageConverter.csproj",
-  "expectedPackageFiles": [],
+  "projectFilePath": "C:\\Users\\HoeRM\\OneDrive - Hogeschool Rotterdam\\Documents\\CodeVoorbeelden\\Experiments\\C-Sharp\\MessageConverter\\MessageConverter.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\HoeRM\\.nuget\\packages\\microsoft.netcore.app.ref\\6.0.26\\microsoft.netcore.app.ref.6.0.26.nupkg.sha512",
+    "C:\\Users\\HoeRM\\.nuget\\packages\\microsoft.windowsdesktop.app.ref\\6.0.26\\microsoft.windowsdesktop.app.ref.6.0.26.nupkg.sha512",
+    "C:\\Users\\HoeRM\\.nuget\\packages\\microsoft.aspnetcore.app.ref\\6.0.26\\microsoft.aspnetcore.app.ref.6.0.26.nupkg.sha512",
+    "C:\\Users\\HoeRM\\.nuget\\packages\\microsoft.netcore.app.host.win-x64\\6.0.26\\microsoft.netcore.app.host.win-x64.6.0.26.nupkg.sha512"
+  ],
   "logs": []
 }

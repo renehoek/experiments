@@ -8,19 +8,19 @@
     "net6.0": []
   },
   "packageFolders": {
-    "/Users/renevanhoek/.nuget/packages/": {}
+    "C:\\Users\\HoeRM\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/Users/renevanhoek/workspace/Experiments/C-Sharp/MessageConverter/MessageConverter.csproj",
+      "projectUniqueName": "C:\\Users\\HoeRM\\OneDrive - Hogeschool Rotterdam\\Documents\\CodeVoorbeelden\\Experiments\\C-Sharp\\MessageConverter\\MessageConverter.csproj",
       "projectName": "MessageConverter",
-      "projectPath": "/Users/renevanhoek/workspace/Experiments/C-Sharp/MessageConverter/MessageConverter.csproj",
-      "packagesPath": "/Users/renevanhoek/.nuget/packages/",
-      "outputPath": "/Users/renevanhoek/workspace/Experiments/C-Sharp/MessageConverter/obj/",
+      "projectPath": "C:\\Users\\HoeRM\\OneDrive - Hogeschool Rotterdam\\Documents\\CodeVoorbeelden\\Experiments\\C-Sharp\\MessageConverter\\MessageConverter.csproj",
+      "packagesPath": "C:\\Users\\HoeRM\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\HoeRM\\OneDrive - Hogeschool Rotterdam\\Documents\\CodeVoorbeelden\\Experiments\\C-Sharp\\MessageConverter\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "/Users/renevanhoek/.nuget/NuGet/NuGet.Config"
+        "C:\\Users\\HoeRM\\AppData\\Roaming\\NuGet\\NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net6.0"
@@ -54,12 +54,30 @@
         ],
         "assetTargetFallback": true,
         "warn": true,
+        "downloadDependencies": [
+          {
+            "name": "Microsoft.AspNetCore.App.Ref",
+            "version": "[6.0.26, 6.0.26]"
+          },
+          {
+            "name": "Microsoft.NETCore.App.Host.win-x64",
+            "version": "[6.0.26, 6.0.26]"
+          },
+          {
+            "name": "Microsoft.NETCore.App.Ref",
+            "version": "[6.0.26, 6.0.26]"
+          },
+          {
+            "name": "Microsoft.WindowsDesktop.App.Ref",
+            "version": "[6.0.26, 6.0.26]"
+          }
+        ],
         "frameworkReferences": {
           "Microsoft.NETCore.App": {
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/6.0.403/RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.405\\RuntimeIdentifierGraph.json"
       }
     }
   }
