@@ -6,10 +6,10 @@
 
 # https://www.geeksforgeeks.org/coin-change-dp-7/?ref=lbp 
 def count(coins, n, sum):
-    print("Coins:", coins)
-    print("N:", n)
-    print("Sum:", sum)
-    print("====")
+    # print("Coins:", coins)
+    # print("N:", n)
+    # print("Sum:", sum)
+    # print("====")
 
     # If sum is 0 then there is 1
     # solution (do not include any coin)
