@@ -145,6 +145,7 @@ class Program
         tree.Insert(25);
         tree.Insert(35);
         tree.Insert(27);
+        tree.Insert(3);
 
         tree.PrintAsciiTree();
         tree.WalkInOrder();
