@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "/Users/renevanhoek/workspace/Experiments/C-Sharp/LinkedList/LinkedList.csproj": {}
+    "C:\\Users\\HoeRM\\OneDrive - Hogeschool Rotterdam\\Documents\\CodeVoorbeelden\\Experiments\\C-Sharp\\LinkedList\\LinkedList.csproj": {}
   },
   "projects": {
-    "/Users/renevanhoek/workspace/Experiments/C-Sharp/LinkedList/LinkedList.csproj": {
+    "C:\\Users\\HoeRM\\OneDrive - Hogeschool Rotterdam\\Documents\\CodeVoorbeelden\\Experiments\\C-Sharp\\LinkedList\\LinkedList.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/renevanhoek/workspace/Experiments/C-Sharp/LinkedList/LinkedList.csproj",
+        "projectUniqueName": "C:\\Users\\HoeRM\\OneDrive - Hogeschool Rotterdam\\Documents\\CodeVoorbeelden\\Experiments\\C-Sharp\\LinkedList\\LinkedList.csproj",
         "projectName": "LinkedList",
-        "projectPath": "/Users/renevanhoek/workspace/Experiments/C-Sharp/LinkedList/LinkedList.csproj",
-        "packagesPath": "/Users/renevanhoek/.nuget/packages/",
-        "outputPath": "/Users/renevanhoek/workspace/Experiments/C-Sharp/LinkedList/obj/",
+        "projectPath": "C:\\Users\\HoeRM\\OneDrive - Hogeschool Rotterdam\\Documents\\CodeVoorbeelden\\Experiments\\C-Sharp\\LinkedList\\LinkedList.csproj",
+        "packagesPath": "C:\\Users\\HoeRM\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\HoeRM\\OneDrive - Hogeschool Rotterdam\\Documents\\CodeVoorbeelden\\Experiments\\C-Sharp\\LinkedList\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "/Users/renevanhoek/.nuget/NuGet/NuGet.Config"
+          "C:\\Users\\HoeRM\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net6.0"
@@ -48,12 +48,30 @@
           ],
           "assetTargetFallback": true,
           "warn": true,
+          "downloadDependencies": [
+            {
+              "name": "Microsoft.AspNetCore.App.Ref",
+              "version": "[6.0.29, 6.0.29]"
+            },
+            {
+              "name": "Microsoft.NETCore.App.Host.win-x64",
+              "version": "[6.0.29, 6.0.29]"
+            },
+            {
+              "name": "Microsoft.NETCore.App.Ref",
+              "version": "[6.0.29, 6.0.29]"
+            },
+            {
+              "name": "Microsoft.WindowsDesktop.App.Ref",
+              "version": "[6.0.29, 6.0.29]"
+            }
+          ],
           "frameworkReferences": {
             "Microsoft.NETCore.App": {
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/6.0.403/RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.408\\RuntimeIdentifierGraph.json"
         }
       }
     }

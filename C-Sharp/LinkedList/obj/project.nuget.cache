@@ -1,8 +1,13 @@
 {
   "version": 2,
-  "dgSpecHash": "9LGGhayJA+SGu72nMxyJXi4mhH60ezflTlB1JcyC8JjBs7chpv9BEcavjclGbifaReRHOf6ykkSunTEjd3qgdA==",
+  "dgSpecHash": "g8MbSLRsEuyzW48XUSByoRNWeor9hmkdFmNehG066n7KQdcNEpg7Zi/SCArHxSKMeG3SiontT0f0Oo8NsgKFHw==",
   "success": true,
-  "projectFilePath": "/Users/renevanhoek/workspace/Experiments/C-Sharp/LinkedList/LinkedList.csproj",
-  "expectedPackageFiles": [],
+  "projectFilePath": "C:\\Users\\HoeRM\\OneDrive - Hogeschool Rotterdam\\Documents\\CodeVoorbeelden\\Experiments\\C-Sharp\\LinkedList\\LinkedList.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\HoeRM\\.nuget\\packages\\microsoft.netcore.app.ref\\6.0.29\\microsoft.netcore.app.ref.6.0.29.nupkg.sha512",
+    "C:\\Users\\HoeRM\\.nuget\\packages\\microsoft.windowsdesktop.app.ref\\6.0.29\\microsoft.windowsdesktop.app.ref.6.0.29.nupkg.sha512",
+    "C:\\Users\\HoeRM\\.nuget\\packages\\microsoft.aspnetcore.app.ref\\6.0.29\\microsoft.aspnetcore.app.ref.6.0.29.nupkg.sha512",
+    "C:\\Users\\HoeRM\\.nuget\\packages\\microsoft.netcore.app.host.win-x64\\6.0.29\\microsoft.netcore.app.host.win-x64.6.0.29.nupkg.sha512"
+  ],
   "logs": []
 }

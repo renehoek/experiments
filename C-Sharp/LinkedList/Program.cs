@@ -1,96 +1,44 @@
 ﻿namespace LinkedList;
 
-interface IList<T> {
-    public void Add(T t);
-    public T? Next();
-}
-
-class LinkedList<T> : IList<T> {
-    private Node? head;
-    private Node? current;
-
-    class Node {
-        public Node? next;
-        public T? obj;
-
-        public Node(T obj) {
-            this.next = null;
-            this.obj = obj;
-        }
-    }
     
-    public LinkedList() {
-        this.head = null;
-        this.current = null;
-    }
-
-    public void Add(T t) {
-        if (this.head is null) {
-            this.head = new Node(t);
-        } else {
-            bool atTheEnd = false;
-            Node cur_node = this.head;
-            while (!atTheEnd) {
-                if (cur_node.next is null) {
-                    cur_node.next = new Node(t);
-                    atTheEnd = true;
-                } else {
-                    cur_node = cur_node.next;
-                }
-            }
-        }
-    }
-
-    public T? Next() {
-        if (this.head is null) {
-            return default(T);
-        }
-
-        if (this.current is null) {
-            this.current = this.head;
-        } else {
-            this.current = this.current.next;
-        }
-
-        if (this.current is null) {
-            return default(T);
-        } else {
-            return this.current.obj;
-        }
-    }
-    
-}
-    
-
-
-
-class Car {
-    public Car(string brand) {
-        this.brand = brand;
-    }
-    public string brand {get; set;}
-}
-
 class Program
 {
+    static Car? FindWithSpeed(Car car, int topSpeed) {
+        if (car.topSpeed == topSpeed) {
+            return car;
+        } else {
+            return null;
+        }
+    }
+
+    static void FillTrunkSpace(Car car) {
+        car.trunkSpaceInUse = car.trunkSpace * 0.5;
+    }
+
     static void Main(string[] args)
     {
         LinkedList<Car> my_list = new LinkedList<Car>();
-        my_list.Add(new Car("Toyota"));
-        my_list.Add(new Car("Opel"));
-        my_list.Add(new Car("VW"));  
+        my_list.Add(new Car("Opel", 170, 215.3));
+        my_list.Add(new Car("Toyota", 200, 180.0));
+        my_list.Add(new Car("VW", 130, 200.3));
 
+        Func<Car, int, Car?> SearchFor = FindWithSpeed;  
 
-        bool hasCar = true;
-        while (hasCar is true) {
-            Car? car = my_list.Next();
-            if (car is not null) {
-                Console.WriteLine(car.brand);
-            } else {
-                Console.WriteLine("No more cars, at the end of the list");
-                hasCar = false;
-            }
+        Car? foundCar = my_list.Find<Car, int>(SearchFor, 200);
+        if (foundCar != null) {
+            Console.WriteLine($"The foundcar is: {foundCar.brand}");
+        } else {
+            Console.WriteLine("Could not find a car");
         }
-        
+
+        Action<Car> SetInUse = Program.FillTrunkSpace;
+        my_list.Modify(SetInUse);
+
+        my_list.GotoStart();
+        Car? myCar = my_list.Get();
+        while(myCar != null) {
+            Console.WriteLine($"{myCar.brand} Trunk space avail {myCar.trunkSpaceInUse} of {myCar.trunkSpace}");
+            myCar = my_list.Next();
+        }
     }
 }
