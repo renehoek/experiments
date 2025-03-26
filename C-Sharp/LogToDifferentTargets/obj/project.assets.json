@@ -1,36 +1,36 @@
 {
   "version": 3,
   "targets": {
-    "net6.0": {}
+    "net7.0": {}
   },
   "libraries": {},
   "projectFileDependencyGroups": {
-    "net6.0": []
+    "net7.0": []
   },
   "packageFolders": {
-    "/Users/renevanhoek/.nuget/packages/": {}
+    "C:\\Users\\HoeRM\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/Users/renevanhoek/workspace/Experiments/C-Sharp/LogToDifferentTargets/LogToDifferentTargets.csproj",
+      "projectUniqueName": "C:\\Users\\HoeRM\\OneDrive - Hogeschool Rotterdam\\Documents\\CodeVoorbeelden\\Experiments\\C-Sharp\\LogToDifferentTargets\\LogToDifferentTargets.csproj",
       "projectName": "LogToDifferentTargets",
-      "projectPath": "/Users/renevanhoek/workspace/Experiments/C-Sharp/LogToDifferentTargets/LogToDifferentTargets.csproj",
-      "packagesPath": "/Users/renevanhoek/.nuget/packages/",
-      "outputPath": "/Users/renevanhoek/workspace/Experiments/C-Sharp/LogToDifferentTargets/obj/",
+      "projectPath": "C:\\Users\\HoeRM\\OneDrive - Hogeschool Rotterdam\\Documents\\CodeVoorbeelden\\Experiments\\C-Sharp\\LogToDifferentTargets\\LogToDifferentTargets.csproj",
+      "packagesPath": "C:\\Users\\HoeRM\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\HoeRM\\OneDrive - Hogeschool Rotterdam\\Documents\\CodeVoorbeelden\\Experiments\\C-Sharp\\LogToDifferentTargets\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "/Users/renevanhoek/.nuget/NuGet/NuGet.Config"
+        "C:\\Users\\HoeRM\\AppData\\Roaming\\NuGet\\NuGet.Config"
       ],
       "originalTargetFrameworks": [
-        "net6.0"
+        "net7.0"
       ],
       "sources": {
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
-        "net6.0": {
-          "targetAlias": "net6.0",
+        "net7.0": {
+          "targetAlias": "net7.0",
           "projectReferences": {}
         }
       },
@@ -41,8 +41,8 @@
       }
     },
     "frameworks": {
-      "net6.0": {
-        "targetAlias": "net6.0",
+      "net7.0": {
+        "targetAlias": "net7.0",
         "imports": [
           "net461",
           "net462",
@@ -59,7 +59,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/6.0.403/RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.405\\RuntimeIdentifierGraph.json"
       }
     }
   }

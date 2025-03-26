@@ -13,11 +13,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/Users/renevanhoek/Library/CloudStorage/OneDrive-HogeschoolRotterdam/Documents/CodeVoorbeelden/Experiments/C-Sharp/AbstractFactory/AbstractFactory.csproj",
-      "projectName": "AbstractFactory",
-      "projectPath": "/Users/renevanhoek/Library/CloudStorage/OneDrive-HogeschoolRotterdam/Documents/CodeVoorbeelden/Experiments/C-Sharp/AbstractFactory/AbstractFactory.csproj",
+      "projectUniqueName": "/Users/renevanhoek/OneDrive - Hogeschool Rotterdam 2/Documents/CodeVoorbeelden/Experiments/C-Sharp/BinaryTree/BinaryTree.csproj",
+      "projectName": "BinaryTree",
+      "projectPath": "/Users/renevanhoek/OneDrive - Hogeschool Rotterdam 2/Documents/CodeVoorbeelden/Experiments/C-Sharp/BinaryTree/BinaryTree.csproj",
       "packagesPath": "/Users/renevanhoek/.nuget/packages/",
-      "outputPath": "/Users/renevanhoek/Library/CloudStorage/OneDrive-HogeschoolRotterdam/Documents/CodeVoorbeelden/Experiments/C-Sharp/AbstractFactory/obj/",
+      "outputPath": "/Users/renevanhoek/OneDrive - Hogeschool Rotterdam 2/Documents/CodeVoorbeelden/Experiments/C-Sharp/BinaryTree/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "/Users/renevanhoek/.nuget/NuGet/NuGet.Config"

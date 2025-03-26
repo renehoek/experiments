@@ -13,11 +13,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/Users/renevanhoek/workspace/Experiments/C-Sharp/FactoryMethod/FactoryMethod.csproj",
+      "projectUniqueName": "/Users/renevanhoek/Library/CloudStorage/OneDrive-HogeschoolRotterdam/Documents/CodeVoorbeelden/Experiments/C-Sharp/FactoryMethod/FactoryMethod.csproj",
       "projectName": "FactoryMethod",
-      "projectPath": "/Users/renevanhoek/workspace/Experiments/C-Sharp/FactoryMethod/FactoryMethod.csproj",
+      "projectPath": "/Users/renevanhoek/Library/CloudStorage/OneDrive-HogeschoolRotterdam/Documents/CodeVoorbeelden/Experiments/C-Sharp/FactoryMethod/FactoryMethod.csproj",
       "packagesPath": "/Users/renevanhoek/.nuget/packages/",
-      "outputPath": "/Users/renevanhoek/workspace/Experiments/C-Sharp/FactoryMethod/obj/",
+      "outputPath": "/Users/renevanhoek/Library/CloudStorage/OneDrive-HogeschoolRotterdam/Documents/CodeVoorbeelden/Experiments/C-Sharp/FactoryMethod/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "/Users/renevanhoek/.nuget/NuGet/NuGet.Config"
